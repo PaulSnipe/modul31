@@ -1,0 +1,6 @@
+<h2>Оставить отклик на "{{ post.title }}"</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить отклик</button>
+</form>

@@ -1,0 +1,12 @@
+<h2>Мои объявления</h2>
+<a href="{% url 'create_post' %}">Создать новое объявление</a>
+<ul>
+    {% for post in posts %}
+        <li>
+            <strong>{{ post.title }}</strong> ({{ post.category }})<br>
+            {{ post.content|linebreaks }}
+        </li>
+    {% empty %}
+        <li>У вас пока нет объявлений.</li>
+    {% endfor %}
+</ul>

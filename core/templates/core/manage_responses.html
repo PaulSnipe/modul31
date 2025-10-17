@@ -1,0 +1,17 @@
+<h2>Отклики на мои объявления</h2>
+<ul>
+    {% for response in responses %}
+        <li>
+            <strong>Объявление:</strong> {{ response.post.title }}<br>
+            <strong>От:</strong> {{ response.author.username }}<br>
+            {{ response.text|linebreaks }}<br>
+            <strong>Принят:</strong> {{ response.accepted }}<br>
+            {% if not response.accepted %}
+                <a href="{% url 'accept_response' response.id %}">Принять</a>
+            {% endif %}
+            <a href="{% url 'delete_response' response.id %}">Удалить</a>
+        </li>
+    {% empty %}
+        <li>Нет откликов.</li>
+    {% endfor %}
+</ul>

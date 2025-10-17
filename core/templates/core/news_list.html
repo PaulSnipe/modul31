@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Новости сервера</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        header a {
+            color: #f1c40f;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        header a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: white;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        li h2 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+        img {
+            display: block;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: #2980b9;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+        .subscribe-btn {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .subscribe-btn:hover {
+            background: #219150;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span>📰 MMORPG Board</span>
+    {% if user.is_authenticated %}
+        | Привет, {{ user.username }}!
+        <a href="{% url 'logout' %}">Выйти</a>
+        <a href="{% url 'my_posts' %}">Мои посты</a>
+        <a href="{% url 'create_post' %}">Создать пост</a>
+    {% else %}
+        <a href="{% url 'login' %}">Войти</a>
+        <a href="{% url 'register' %}">Регистрация</a>
+    {% endif %}
+</header>
+
+<h1>Новости сервера</h1>
+
+<a class="subscribe-btn" href="{% url 'subscribe_category' %}">Подписаться на категории</a>
+
+{% if page_obj %}
+    <ul>
+        {% for post in page_obj %}
+            <li>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content|truncatechars:200 }}</p>
+
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" width="200">
+                {% endif %}
+
+                <p><strong>Автор:</strong> {{ post.author.username }}</p>
+                <p><strong>Категория:</strong> {{ post.category }}</p>
+
+                <a href="{% url 'post_detail' post.id %}">Читать далее</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">« Предыдущая</a>
+        {% endif %}
+
+        <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Следующая »</a>
+        {% endif %}
+    </div>
+{% else %}
+    <p>Постов пока нет.</p>
+{% endif %}
+
+</body>
+</html>
